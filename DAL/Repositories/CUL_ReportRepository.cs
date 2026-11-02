@@ -1341,11 +1341,12 @@ namespace DAL.Repositories
                                                 {
                                                     q1.Perc = reader["Perc"].ToString().Trim() + "%";
                                                 }
+                                               
                                                 if (reader["Our_File"] != DBNull.Value)
                                                 {
                                                     q1.Our_File = ((int)reader["Our_File"]);
                                                 }
-                                                q1.Reg_Link = GetPortalToken(q1.Our_File.ToString(), q1.Email, q1.co_description);
+                                                q1.Reg_Link = GetPortalToken(q1.Our_File.ToString(), q1.Email);
 
                                                 if (reader["group_count"] != DBNull.Value)
                                                 {
@@ -1616,7 +1617,7 @@ namespace DAL.Repositories
                                                     q1.Our_File = ((int)reader["Our_File"]);
                                                 }
 
-                                                q1.Reg_Link = GetPortalToken(q1.Our_File.ToString(), q1.Email, q1.co_description);
+                                                q1.Reg_Link = GetPortalToken(q1.Our_File.ToString(), q1.Email);
 
                                                 if (reader["group_count"] != DBNull.Value)
                                                 {
@@ -1749,6 +1750,7 @@ namespace DAL.Repositories
                                                 {
                                                     q1.InterestRecal = ((string)reader["InterestRecal"]).Trim();
                                                 }
+                                                q1.Reg_Link = GetPortalToken(q1.Our_File.ToString(), q1.Email, q1.co_description);
 
                                                 Listq1.Add(q1);
 
@@ -2615,7 +2617,7 @@ namespace DAL.Repositories
 
             return Task.FromResult(combinedList);
         }
-        public string GetPortalToken(string fileNumber, string debtorEmail, string coDescription)
+        public string GetPortalToken(string fileNumber, string debtorEmail, string coDescription=null)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
