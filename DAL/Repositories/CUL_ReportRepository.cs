@@ -1421,6 +1421,10 @@ namespace DAL.Repositories
                                                 {
                                                     q1.Operator = ((string)reader["Operator"]).Trim();
                                                 }
+                                                if (reader["co_description"] != DBNull.Value)
+                                                {
+                                                    q1.co_description = ((string)reader["co_description"]).Trim();
+                                                }
 
                                                 if (reader["debtor_type"] != DBNull.Value)
                                                 {
@@ -1681,6 +1685,10 @@ namespace DAL.Repositories
                                                 if (reader["debtor_status"] != DBNull.Value)
                                                 {
                                                     q1.debtor_status = ((string)reader["debtor_status"]).Trim();
+                                                }
+                                                if (reader["co_description"] != DBNull.Value)
+                                                {
+                                                    q1.co_description = ((string)reader["co_description"]).Trim();
                                                 }
                                                 if (reader["Operator"] != DBNull.Value)
                                                 {
@@ -1945,6 +1953,10 @@ namespace DAL.Repositories
                                             {
                                                 q2.debtor_status = ((string)reader["debtor_status"]).Trim();
                                             }
+                                            if (reader["co_description"] != DBNull.Value)
+                                            {
+                                                q2.co_description = ((string)reader["co_description"]).Trim();
+                                            }
                                             if (reader["Operator"] != DBNull.Value)
                                             {
                                                 q2.Operator = ((string)reader["Operator"]).Trim();
@@ -2185,11 +2197,11 @@ namespace DAL.Repositories
                                     }
                                     if (reader["email"] != DBNull.Value)
                                     {
-                                        q1.Reg_Link = GetPortalToken(q1.Our_File.ToString(), q1.Email, q1.co_description);
+                                        q1.Reg_Link = GetPortalToken(q1.Our_File.ToString(), q1.Email, col.coun, q1.co_description);
                                     }
                                     else if (reader["CosEmail"] != DBNull.Value)
                                     {
-                                        q1.Reg_Link = GetPortalToken(q1.Our_File.ToString(), q1.CosEmail, q1.co_description);
+                                        q1.Reg_Link = GetPortalToken(q1.Our_File.ToString(), q1.CosEmail, col.coun, q1.co_description);
 
                                     }
                                     if (reader["group_count"] != DBNull.Value)
@@ -2617,7 +2629,7 @@ namespace DAL.Repositories
 
             return Task.FromResult(combinedList);
         }
-        public string GetPortalToken(string fileNumber, string debtorEmail, string coDescription=null)
+        public string GetPortalToken(string fileNumber, string debtorEmail, string country=null,string coDescription=null)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -2647,13 +2659,24 @@ namespace DAL.Repositories
             // Build campaign date: MM-DD-YYYY (today's date)
             string campaignDate = DateTime.UtcNow.ToString("MM-dd-yyyy");
 
-            // Build campaign ID
-            bool isMVN = !string.IsNullOrEmpty(coDescription) &&
-                          coDescription.ToUpper().Contains("MVN");
+            string monthAbbr = DateTime.UtcNow.ToString("MMM").ToUpper();
+            string day = DateTime.UtcNow.ToString("dd");
 
-            string monthAbbr = DateTime.UtcNow.ToString("MMM").ToUpper(); // e.g. OCT
-            string day = DateTime.UtcNow.ToString("dd");                 
-            string campaignId = isMVN ? $"MVN{monthAbbr}{day}" : $"RGLR{monthAbbr}{day}";
+            bool isMVN = !string.IsNullOrEmpty(coDescription) &&
+                         coDescription.ToUpper().Contains("MVN");
+
+            string campaignId;
+
+            if (country?.Equals("International", StringComparison.OrdinalIgnoreCase) == true)
+            {
+                campaignId = $"INT{monthAbbr}{day}";
+            }
+            else
+            {
+                campaignId = isMVN
+                    ? $"MVN{monthAbbr}{day}"
+                    : $"RGLR{monthAbbr}{day}";
+            }
 
             string urlTemplate = "https://connect.cedarsbiz.com/register?refNum={0}&token={1}&campaignDate={2}&campaignId={3}&utm_source=collection_notice&utm_medium=email";
 

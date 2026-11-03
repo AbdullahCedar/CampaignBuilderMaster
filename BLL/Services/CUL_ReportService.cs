@@ -78,11 +78,11 @@ namespace BLL.Services
                 throw new Exception(ex.Message);
             }
         }
-        public async Task<dynamic> GetPortalToken(string FileNumber, string debtorEmail, string coDescription)
+        public async Task<dynamic> GetPortalToken(string FileNumber, string debtorEmail, string country, string coDescription)
         {
             try
             {
-                var response = _culReportRepository.GetPortalToken(FileNumber, debtorEmail, coDescription);
+                var response = _culReportRepository.GetPortalToken(FileNumber, country,debtorEmail, coDescription);
                 return response;
             }
             catch (Exception ex)

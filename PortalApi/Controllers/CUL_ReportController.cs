@@ -1113,12 +1113,12 @@ namespace PortalApi.Controllers
             StringBuilder csvBuilder = new StringBuilder();
             if (!_coDes.IsNullOrEmpty() || !_coWho.IsNullOrEmpty())
             {
-                csvBuilder.AppendLine("Email,RowNum,LastEmailSentDate,co_description,first_name,last_name,Original_Creditor,Account_Num,Fees,Interest,Payments,Outstanding_Balance,principal,Setc_Amunt,Savings,InterestRecal,perc,Our_File,reg_link,group_count,Charged,delinquency_date,Settlement,address,city,state,zip,Itemization_Date,listed_date,Client,Client_num,mode,debtor_status,opertator,debtor_type,contact,validation_date,debtor_Name,debtor_closed,debtor_legal,home_extension,work_extension,cell_extension,other_extension,group_filenumber,debtor_country,Responsible Party,Score,Summary");
+                csvBuilder.AppendLine("Email,RowNum,LastEmailSentDate,co_description,first_name,last_name,Original_Creditor,Account_Num,Fees,Interest,Payments,Outstanding_Balance,principal,Setc_Amunt,Savings,InterestRecal,perc,Our_File,reg_link,group_count,Charged,delinquency_date,Settlement,address,city,state,zip,Itemization_Date,listed_date,Client,Client_num,mode,debtor_status,opertator,debtor_type,contact,validation_date,debtor_Name,debtor_closed,debtor_legal,home_extension,work_extension,cell_extension,other_extension,group_filenumber,debtor_country,Responsible Party,Score,Summary,co_description");
 
             }
             else
             {
-                csvBuilder.AppendLine("Email,RowNum,LastEmailSentDate,first_name,last_name,Original_Creditor,Account_Num,Fees,Interest,Payments,Outstanding_Balance,principal,Setc_Amunt,Savings,InterestRecal,perc,Our_File,reg_link,group_count,Charged,delinquency_date,Settlement,address,city,state,zip,Itemization_Date,listed_date,Client,Client_num,mode,debtor_status,opertator,debtor_type,contact,validation_date,debtor_Name,debtor_closed,debtor_legal,home_extension,work_extension,cell_extension,other_extension,group_filenumber,debtor_country,Responsible Party,Score,Summary");
+                csvBuilder.AppendLine("Email,RowNum,LastEmailSentDate,first_name,last_name,Original_Creditor,Account_Num,Fees,Interest,Payments,Outstanding_Balance,principal,Setc_Amunt,Savings,InterestRecal,perc,Our_File,reg_link,group_count,Charged,delinquency_date,Settlement,address,city,state,zip,Itemization_Date,listed_date,Client,Client_num,mode,debtor_status,opertator,debtor_type,contact,validation_date,debtor_Name,debtor_closed,debtor_legal,home_extension,work_extension,cell_extension,other_extension,group_filenumber,debtor_country,Responsible Party,Score,Summary,co_description");
             }
             // Add CSV headers
             //csvBuilder.AppendLine("email,RowNum,first_name,last_name,Original_Creditor,Account_Num,Fees,Interest,Payments,Outstanding_Balance,principal,Setc_Amunt,Savings,perc,Our_File,reg_link,group_count,Charged,Settlement,address1,city,state,zip,Itemization_Date,listed_date,Client,Client_num,mode,debtor_status,opertator,debtor_type,contact,validation_date,debtor_Name,debtor_closed,debtor_legal,home_extension,work_extension,cell_extension,other_extension,group_filenumber,debtor_country");
@@ -1135,7 +1135,7 @@ namespace PortalApi.Controllers
                     values.Add(FormatValue(report.Email));
                     values.Add(FormatValue(report.RowNum));
                     values.Add(FormatValue(report.LastEmailSentDate));
-                    if (!string.IsNullOrEmpty(_coWho))
+                    if (!_coDes.IsNullOrEmpty() || !_coWho.IsNullOrEmpty())
                     {
                         values.Add(FormatValueCol(report.co_description));
                     }
@@ -1184,6 +1184,8 @@ namespace PortalApi.Controllers
                     values.Add(FormatValue1(report.ResponsibleParty_Email));
                     values.Add(FormatValue1(report.Score));
                     values.Add(FormatValue1(report.Summary));
+                    values.Add(FormatValue1(report.co_description));
+
                     // Combine the values using commas and append to the CSV builder
                     csvBuilder.AppendLine(string.Join(",", values));
                 }
@@ -1211,12 +1213,12 @@ namespace PortalApi.Controllers
         }
 
         [HttpPost("GetPortalToken")]
-        public async Task<IActionResult> GetPortalToken(string FileNumber, string debtorEmail, string coDescription)
+        public async Task<IActionResult> GetPortalToken(string FileNumber, string debtorEmail, string country, string coDescription)
         {
             try
             {
                 var constrr = (string)HttpContext.Items["constr"];
-                var response = await _BLL.GetPortalToken(FileNumber, debtorEmail, coDescription);
+                var response = await _BLL.GetPortalToken(FileNumber, debtorEmail,country, coDescription);
                 return Ok(response);
             }
             catch (Exception ex)

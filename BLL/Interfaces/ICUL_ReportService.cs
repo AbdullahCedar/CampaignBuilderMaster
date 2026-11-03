@@ -11,7 +11,7 @@ namespace BLL.Interfaces
         Task<dynamic> CosignerEmail(CUL_Report_Parameters col, string constrr);
         Task<dynamic> WIPEmailCampaign(WipEmail col, string constrr);
         Task<dynamic> SMSCWipCampaign(SMSCWip col, string constrr);
-        Task<dynamic> GetPortalToken(string fileNumber, string debtorEmail, string coDescription);
+        Task<dynamic> GetPortalToken(string fileNumber, string debtorEmail, string country, string coDescription);
 
     }
 }

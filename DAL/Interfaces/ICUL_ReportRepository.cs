@@ -10,7 +10,7 @@ namespace DAL.Interfaces
         Task<List<dynamic>> CosignerEmail(CUL_Report_Parameters col, string constrr);
         Task<List<dynamic>> WIPEmailCampaign(WipEmail col, string constrr);
        //Task<List<EmailReport>> WIPEmailCampaign(WipEmail col, string constrr);
-        public string GetPortalToken(string FileNumber, string debtorEmail, string coDescription);
+        public string GetPortalToken(string FileNumber, string debtorEmail, string country, string coDescription);
         Task<List<SMSCreport>> SMSCWipCampaign(SMSCWip col, string constrr);
 
     }
