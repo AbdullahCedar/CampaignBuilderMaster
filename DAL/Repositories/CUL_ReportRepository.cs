@@ -1346,7 +1346,6 @@ namespace DAL.Repositories
                                                 {
                                                     q1.Our_File = ((int)reader["Our_File"]);
                                                 }
-                                                q1.Reg_Link = GetPortalToken(q1.Our_File.ToString(), q1.Email);
 
                                                 if (reader["group_count"] != DBNull.Value)
                                                 {
@@ -1425,6 +1424,7 @@ namespace DAL.Repositories
                                                 {
                                                     q1.co_description = ((string)reader["co_description"]).Trim();
                                                 }
+                                                q1.Reg_Link = GetPortalToken(q1.Our_File.ToString(), q1.Email, col.coun, q1.co_description);
 
                                                 if (reader["debtor_type"] != DBNull.Value)
                                                 {
@@ -1758,7 +1758,7 @@ namespace DAL.Repositories
                                                 {
                                                     q1.InterestRecal = ((string)reader["InterestRecal"]).Trim();
                                                 }
-                                                q1.Reg_Link = GetPortalToken(q1.Our_File.ToString(), q1.Email, q1.co_description);
+                                                q1.Reg_Link = GetPortalToken(q1.Our_File.ToString(), q1.Email, col.coun, q1.co_description);
 
                                                 Listq1.Add(q1);
 
@@ -1888,8 +1888,6 @@ namespace DAL.Repositories
                                                 q2.Our_File = ((int)reader["Our_File"]);
                                             }
 
-                                            q2.Reg_Link = GetPortalToken(q2.Our_File.ToString(), q2.Email, q2.co_description);
-
                                             if (reader["group_count"] != DBNull.Value)
                                             {
                                                 q2.group_count = ((Int16)reader["group_count"]);
@@ -1957,6 +1955,7 @@ namespace DAL.Repositories
                                             {
                                                 q2.co_description = ((string)reader["co_description"]).Trim();
                                             }
+                                            q2.Reg_Link = GetPortalToken(q2.Our_File.ToString(), q2.Email, col.coun, q2.co_description);
                                             if (reader["Operator"] != DBNull.Value)
                                             {
                                                 q2.Operator = ((string)reader["Operator"]).Trim();
