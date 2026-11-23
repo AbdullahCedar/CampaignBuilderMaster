@@ -1111,15 +1111,9 @@ namespace PortalApi.Controllers
         private string GenerateEmailCSV(List<dynamic> reportMailcsv)
         {
             StringBuilder csvBuilder = new StringBuilder();
-            if (!_coDes.IsNullOrEmpty() || !_coWho.IsNullOrEmpty())
-            {
-                csvBuilder.AppendLine("Email,RowNum,LastEmailSentDate,co_description,first_name,last_name,Original_Creditor,Account_Num,Fees,Interest,Payments,Outstanding_Balance,principal,Setc_Amunt,Savings,InterestRecal,perc,Our_File,reg_link,group_count,Charged,delinquency_date,Settlement,address,city,state,zip,Itemization_Date,listed_date,Client,Client_num,mode,debtor_status,opertator,debtor_type,contact,validation_date,debtor_Name,debtor_closed,debtor_legal,home_extension,work_extension,cell_extension,other_extension,group_filenumber,debtor_country,Responsible Party,Score,Summary,co_description");
-
-            }
-            else
-            {
-                csvBuilder.AppendLine("Email,RowNum,LastEmailSentDate,first_name,last_name,Original_Creditor,Account_Num,Fees,Interest,Payments,Outstanding_Balance,principal,Setc_Amunt,Savings,InterestRecal,perc,Our_File,reg_link,group_count,Charged,delinquency_date,Settlement,address,city,state,zip,Itemization_Date,listed_date,Client,Client_num,mode,debtor_status,opertator,debtor_type,contact,validation_date,debtor_Name,debtor_closed,debtor_legal,home_extension,work_extension,cell_extension,other_extension,group_filenumber,debtor_country,Responsible Party,Score,Summary,co_description");
-            }
+            // Percentage, co_description and OOS are always present (same order as the WIP campaign);
+            // the stored procedure decides the values, and a NULL value is written as an empty cell.
+            csvBuilder.AppendLine("Email,RowNum,LastEmailSentDate,first_name,last_name,Original_Creditor,Account_Num,Fees,Interest,Payments,Outstanding_Balance,principal,Setc_Amunt,Savings,InterestRecal,perc,Our_File,reg_link,group_count,Charged,delinquency_date,Settlement,address,city,state,zip,Itemization_Date,listed_date,Client,Client_num,mode,debtor_status,opertator,debtor_type,contact,validation_date,debtor_Name,debtor_closed,debtor_legal,home_extension,work_extension,cell_extension,other_extension,group_filenumber,debtor_country,Percentage,co_description,OOS,Responsible Party,Score,Summary");
             // Add CSV headers
             //csvBuilder.AppendLine("email,RowNum,first_name,last_name,Original_Creditor,Account_Num,Fees,Interest,Payments,Outstanding_Balance,principal,Setc_Amunt,Savings,perc,Our_File,reg_link,group_count,Charged,Settlement,address1,city,state,zip,Itemization_Date,listed_date,Client,Client_num,mode,debtor_status,opertator,debtor_type,contact,validation_date,debtor_Name,debtor_closed,debtor_legal,home_extension,work_extension,cell_extension,other_extension,group_filenumber,debtor_country");
 
@@ -1135,10 +1129,6 @@ namespace PortalApi.Controllers
                     values.Add(FormatValue(report.Email));
                     values.Add(FormatValue(report.RowNum));
                     values.Add(FormatValue(report.LastEmailSentDate));
-                    if (!_coDes.IsNullOrEmpty() || !_coWho.IsNullOrEmpty())
-                    {
-                        values.Add(FormatValueCol(report.co_description));
-                    }
                     values.Add(FormatValue(report.First_Name));
                     values.Add(FormatValue(report.Last_Name));
                     values.Add(FormatValue(report.Original_Creditor));
@@ -1181,10 +1171,12 @@ namespace PortalApi.Controllers
                     values.Add(FormatValue(report.other_extension));
                     values.Add(FormatValue(report.group_filenumber));
                     values.Add(FormatValue(report.debtor_country));
+                    values.Add(FormatValue1(report.Percentage));
+                    values.Add(FormatValue1(report.co_description ?? string.Empty));
+                    values.Add(FormatValue1(report.OOS));
                     values.Add(FormatValue1(report.ResponsibleParty_Email));
                     values.Add(FormatValue1(report.Score));
                     values.Add(FormatValue1(report.Summary));
-                    values.Add(FormatValue1(report.co_description));
 
                     // Combine the values using commas and append to the CSV builder
                     csvBuilder.AppendLine(string.Join(",", values));

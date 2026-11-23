@@ -1388,6 +1388,7 @@ namespace DAL.Repositories
                                                 {
                                                     q1.OOS = (int)reader["OOS"];
                                                 }
+                                                q1.Percentage = ReadPercentage(reader);
                                                 if (reader["zip"] != DBNull.Value)
                                                 {
                                                     q1.zip = ((string)reader["zip"]).Trim();
@@ -1658,6 +1659,7 @@ namespace DAL.Repositories
                                                 {
                                                     q1.OOS = (int)reader["OOS"];
                                                 }
+                                                q1.Percentage = ReadPercentage(reader);
                                                 if (reader["zip"] != DBNull.Value)
                                                 {
                                                     q1.zip = ((string)reader["zip"]).Trim();
@@ -1923,6 +1925,7 @@ namespace DAL.Repositories
                                             {
                                                 q2.OOS = (int)reader["OOS"];
                                             }
+                                            q2.Percentage = ReadPercentage(reader);
                                             if (reader["zip"] != DBNull.Value)
                                             {
                                                 q2.zip = ((string)reader["zip"]).Trim();
@@ -2889,6 +2892,20 @@ namespace DAL.Repositories
         }
 
         // Helper method — place this inside the same class
+        // Percentage formatted like the WIP campaign ("0.00"). Returns "" when the column
+        // is NULL or the stored procedure doesn't return it, so the CSV cell stays empty.
+        private static string ReadPercentage(SqlDataReader reader)
+        {
+            for (int i = 0; i < reader.FieldCount; i++)
+            {
+                if (string.Equals(reader.GetName(i), "Percentage", StringComparison.OrdinalIgnoreCase))
+                {
+                    return reader.IsDBNull(i) ? string.Empty : Convert.ToDecimal(reader.GetValue(i)).ToString("0.00");
+                }
+            }
+            return string.Empty;
+        }
+
         private string SafeString(SqlDataReader reader, string column, string dateFormat = "MM/dd/yyyy")
         {
             if (reader[column] == DBNull.Value) return string.Empty;
